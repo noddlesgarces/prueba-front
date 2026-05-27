@@ -126,7 +126,7 @@ function ProductForm() {
             </form>
 
             <hr />
-            <h2>Productos registrados</h2>
+            <h2>Productos registrados <span className="badge">{productos.length}</span></h2>
             <div className='lista-productos'>
                 {productos.map((productos, index) => (
                     <div className="card" key={index}>
