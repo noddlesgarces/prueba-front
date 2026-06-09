@@ -5,22 +5,23 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  image-rendering: pixelated;
 }
 
-/* ── Tokens 8-bit ────────────────────────────────────────────────────────── */
+/* ── Tokens Arcade ───────────────────────────────────────────────────────── */
 :root {
-  --bg:         #9BBC0F;   /* Game Boy verde claro */
-  --bg2:        #8BAC0F;   /* Game Boy verde medio */
-  --surface:    #306230;   /* verde oscuro pantalla GB */
-  --primary:    #0F380F;   /* negro Game Boy */
-  --text:       #9BBC0F;   /* texto verde claro */
-  --text-dark:  #0F380F;
-  --border:     #0F380F;
-  --error:      #FF0044;
-  --accent:     #FFDD00;
-  --radius:     0px;
-  --border-w:   3px;
+  --bg:        #111111;
+  --surface:   #1C1C1C;
+  --surface2:  #2A2A2A;
+  --primary:   #FF6600;
+  --primary-dk:#CC4400;
+  --text:      #FFFFFF;
+  --text-soft: #AAAAAA;
+  --border:    #FF6600;
+  --border-dim:#444444;
+  --error:     #FF2244;
+  --accent:    #FFCC00;
+  --radius:    0px;
+  --bw:        3px;       /* border width */
 }
 
 /* ── Base ────────────────────────────────────────────────────────────────── */
@@ -32,8 +33,8 @@ body {
       0deg,
       transparent,
       transparent 3px,
-      rgba(0,0,0,0.03) 3px,
-      rgba(0,0,0,0.03) 4px
+      rgba(255,255,255,0.015) 3px,
+      rgba(255,255,255,0.015) 4px
     );
   min-height: 100vh;
   color: var(--text);
@@ -43,112 +44,107 @@ body {
 /* ── Contenedor ──────────────────────────────────────────────────────────── */
 .contenedor {
   width: 92%;
-  max-width: 660px;
+  max-width: 680px;
   margin: 40px auto;
-  padding: 28px 28px 32px;
+  padding: 32px 32px 36px;
   background: var(--surface);
-  border: var(--border-w) solid var(--primary);
-  border-radius: var(--radius);
-  /* pixel drop shadow */
+  border: var(--bw) solid var(--primary);
   box-shadow:
-    4px 0   0 0 var(--primary),
-    0   4px 0 0 var(--primary),
-    4px 4px 0 0 var(--primary),
-    8px 0   0 0 var(--primary),
-    0   8px 0 0 var(--primary),
-    8px 8px 0 0 var(--primary);
+    6px 0   0 0 var(--primary-dk),
+    0   6px 0 0 var(--primary-dk),
+    6px 6px 0 0 var(--primary-dk);
 }
 
 /* ── Título ──────────────────────────────────────────────────────────────── */
 h1 {
   text-align: center;
-  font-size: 0.75rem;
-  color: var(--accent);
+  font-size: 1.1rem;
+  color: var(--primary);
   letter-spacing: 0.04em;
-  margin-bottom: 28px;
-  text-shadow:
-    2px 2px 0 var(--primary),
-    -1px -1px 0 rgba(0,0,0,0.3);
-  line-height: 1.8;
+  margin-bottom: 32px;
+  line-height: 1.4;
 }
 
 /* ── Formulario ──────────────────────────────────────────────────────────── */
 form {
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 
 label {
   display: block;
-  font-size: 0.45rem;
-  font-weight: 400;
-  color: var(--accent);
+  font-size: 0.55rem;
+  color: var(--primary);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin-top: 16px;
-  margin-bottom: 6px;
+  margin-top: 20px;
+  margin-bottom: 8px;
 }
 
+/* ── Campos base ─────────────────────────────────────────────────────────── */
 input,
 select,
 textarea {
   width: 100%;
-  padding: 10px 10px;
-  background: var(--bg);
-  border: var(--border-w) solid var(--primary);
-  border-radius: var(--radius);
-  color: var(--text-dark);
+  padding: 12px 14px;
+  background: var(--surface2);
+  border: var(--bw) solid var(--border-dim);
+  color: var(--text);               /* texto siempre blanco */
   font-family: 'Press Start 2P', monospace;
-  font-size: 0.5rem;
+  font-size: 0.6rem;
   outline: none;
-  transition: box-shadow 0.1s ease;
-  box-shadow: 2px 2px 0 var(--primary);
+  transition: border-color 0.1s ease, box-shadow 0.1s ease;
+  box-shadow: 3px 3px 0 #000;
+  caret-color: var(--primary);
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: var(--bg2);
+  color: #555555;
 }
 
+/* Al hacer foco: borde naranja + texto blanco bien visible */
 input:focus,
 select:focus,
 textarea:focus {
-  box-shadow: 3px 3px 0 var(--primary), 0 0 0 2px var(--accent);
+  border-color: var(--primary);
+  box-shadow: 3px 3px 0 var(--primary-dk), 0 0 0 1px var(--primary);
+  background: #222222;
+  color: var(--text);
 }
 
 textarea {
   resize: vertical;
-  min-height: 80px;
-  line-height: 1.8;
+  min-height: 90px;
+  line-height: 2;
 }
 
 select {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0h2v2h2v2h2V2h2V0h2v2H8v2H6v2H4V4H2V2H0z' fill='%230F380F'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0h2v2h2v2h2V2h2V0h2v2H8v2H6v2H4V4H2V2H0z' fill='%23FF6600'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 32px;
+  background-position: right 12px center;
+  padding-right: 36px;
   cursor: pointer;
 }
 
 select option {
-  background: var(--bg);
-  color: var(--text-dark);
+  background: var(--surface2);
+  color: var(--text);
   font-family: 'Press Start 2P', monospace;
 }
 
 /* ── Zona imagen ─────────────────────────────────────────────────────────── */
 .file-drop {
-  border: var(--border-w) dashed var(--primary);
-  padding: 20px 12px;
+  border: var(--bw) dashed var(--border-dim);
+  padding: 22px 14px;
   text-align: center;
-  background: rgba(155, 188, 15, 0.15);
-  transition: background 0.1s ease;
+  background: var(--surface2);
+  transition: border-color 0.1s ease;
 }
 
 .file-drop:hover {
-  background: rgba(255, 221, 0, 0.1);
+  border-color: var(--primary);
 }
 
 .file-drop input[type="file"] {
@@ -156,57 +152,58 @@ select option {
   background: transparent;
   padding: 0;
   box-shadow: none;
-  font-size: 0.42rem;
-  color: var(--text-dark);
+  font-size: 0.45rem;
+  color: var(--text-soft);
   cursor: pointer;
 }
 
 .file-drop input[type="file"]:focus {
   box-shadow: none;
+  border: none;
 }
 
 .file-drop input[type="file"]::-webkit-file-upload-button {
   background: var(--primary);
-  border: 2px solid var(--primary);
-  border-radius: 0;
-  color: var(--accent);
+  border: 2px solid var(--primary-dk);
+  color: #000;
   font-family: 'Press Start 2P', monospace;
-  font-size: 0.38rem;
-  padding: 6px 10px;
-  margin-right: 10px;
+  font-size: 0.4rem;
+  padding: 7px 12px;
+  margin-right: 12px;
   cursor: pointer;
-  box-shadow: 2px 2px 0 var(--bg2);
+  box-shadow: 2px 2px 0 var(--primary-dk);
+  transition: background 0.1s ease;
 }
 
 .file-drop input[type="file"]::-webkit-file-upload-button:hover {
-  background: #1a4a1a;
+  background: var(--primary-dk);
 }
 
 /* ── Vista previa ────────────────────────────────────────────────────────── */
 .preview-titulo {
-  font-size: 0.42rem;
-  color: var(--accent);
+  font-size: 0.45rem;
+  color: var(--primary);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin-top: 14px;
-  margin-bottom: 6px;
+  margin-top: 16px;
+  margin-bottom: 8px;
 }
 
 .visualizacion {
-  width: 96px;
-  height: 72px;
+  width: 112px;
+  height: 84px;
   object-fit: cover;
-  border: var(--border-w) solid var(--primary);
+  border: var(--bw) solid var(--primary);
   display: block;
   image-rendering: pixelated;
-  box-shadow: 3px 3px 0 var(--primary);
+  box-shadow: 4px 4px 0 var(--primary-dk);
 }
 
 /* ── Fila Precio / Stock ─────────────────────────────────────────────────── */
 .fila-dos {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 16px;
 }
 
 .campo {
@@ -215,51 +212,50 @@ select option {
 }
 
 .campo label {
-  margin-top: 16px;
+  margin-top: 20px;
 }
 
 /* ── Botón guardar ───────────────────────────────────────────────────────── */
 button[type="submit"] {
-  margin-top: 22px;
+  margin-top: 26px;
   width: 100%;
-  padding: 14px;
+  padding: 16px;
   background: var(--primary);
-  color: var(--accent);
-  border: var(--border-w) solid var(--primary);
-  border-radius: var(--radius);
+  color: #000000;
+  border: var(--bw) solid var(--primary-dk);
   font-family: 'Press Start 2P', monospace;
-  font-size: 0.55rem;
+  font-size: 0.65rem;
   font-weight: 400;
   cursor: pointer;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  box-shadow: 4px 4px 0 var(--bg2);
-  transition: box-shadow 0.08s ease, transform 0.08s ease;
+  box-shadow: 5px 5px 0 var(--primary-dk);
+  transition: box-shadow 0.08s ease, transform 0.08s ease, background 0.08s ease;
 }
 
 button[type="submit"]:hover {
-  background: #1a4a1a;
-  box-shadow: 2px 2px 0 var(--bg2);
+  background: var(--primary-dk);
+  box-shadow: 3px 3px 0 #000;
   transform: translate(2px, 2px);
 }
 
 button[type="submit"]:active {
   box-shadow: none;
-  transform: translate(4px, 4px);
+  transform: translate(5px, 5px);
 }
 
 /* ── Errores ─────────────────────────────────────────────────────────────── */
 .error {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   color: var(--error);
-  font-size: 0.38rem;
-  margin-top: 6px;
-  padding: 6px 8px;
-  background: var(--primary);
+  font-size: 0.42rem;
+  margin-top: 7px;
+  padding: 7px 10px;
+  background: #2A0010;
   border: 2px solid var(--error);
-  line-height: 1.6;
+  line-height: 1.8;
 }
 
 .error::before {
@@ -267,87 +263,87 @@ button[type="submit"]:active {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 14px;
-  height: 14px;
-  min-width: 14px;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
   background: var(--error);
   color: white;
-  font-size: 0.5rem;
+  font-size: 0.55rem;
   font-weight: 700;
 }
 
 /* ── Separador ───────────────────────────────────────────────────────────── */
 hr {
   border: none;
-  border-top: var(--border-w) solid var(--bg2);
-  margin: 28px 0 20px;
+  border-top: var(--bw) solid var(--border-dim);
+  margin: 30px 0 22px;
 }
 
 /* ── Contador ────────────────────────────────────────────────────────────── */
 h2 {
-  font-size: 0.5rem;
+  font-size: 0.55rem;
   color: var(--text);
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 18px;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 22px;
-  height: 22px;
-  padding: 0 6px;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 8px;
   background: var(--accent);
-  color: var(--primary);
+  color: #000;
   font-family: 'Press Start 2P', monospace;
-  font-size: 0.5rem;
-  border: 2px solid var(--primary);
-  box-shadow: 2px 2px 0 var(--primary);
+  font-size: 0.55rem;
+  border: 2px solid #000;
+  box-shadow: 2px 2px 0 #000;
   line-height: 1;
 }
 
 /* ── Grid de tarjetas ────────────────────────────────────────────────────── */
 .lista-productos {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 18px;
 }
 
 /* ── Tarjeta ─────────────────────────────────────────────────────────────── */
 .card {
-  background: var(--bg);
-  border: var(--border-w) solid var(--primary);
-  border-radius: var(--radius);
+  background: var(--surface2);
+  border: var(--bw) solid var(--border-dim);
   overflow: hidden;
-  box-shadow: 4px 4px 0 var(--primary);
-  transition: box-shadow 0.08s ease, transform 0.08s ease;
+  box-shadow: 5px 5px 0 #000;
+  transition: box-shadow 0.08s ease, transform 0.08s ease, border-color 0.1s ease;
 }
 
 .card:hover {
-  box-shadow: 2px 2px 0 var(--primary);
+  border-color: var(--primary);
+  box-shadow: 3px 3px 0 var(--primary-dk);
   transform: translate(2px, 2px);
 }
 
 .card img {
   width: 100%;
-  height: 110px;
+  height: 120px;
   object-fit: cover;
   display: block;
-  border-bottom: var(--border-w) solid var(--primary);
+  border-bottom: var(--bw) solid var(--border-dim);
   image-rendering: pixelated;
 }
 
 .card-body {
-  padding: 12px 10px;
+  padding: 14px 12px;
 }
 
 .card-body h3 {
-  font-size: 0.45rem;
-  color: var(--text-dark);
-  margin-bottom: 6px;
+  font-size: 0.5rem;
+  color: var(--text);
+  margin-bottom: 8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -355,10 +351,10 @@ h2 {
 }
 
 .card-descripcion {
-  font-size: 0.38rem;
-  color: #306230;
-  line-height: 1.7;
-  margin-bottom: 8px;
+  font-size: 0.4rem;
+  color: var(--text-soft);
+  line-height: 1.8;
+  margin-bottom: 10px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -368,54 +364,52 @@ h2 {
 .card-meta {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
 .precio-tag {
-  font-size: 0.45rem;
-  font-weight: 400;
-  color: var(--text-dark);
+  font-size: 0.5rem;
+  color: var(--accent);
 }
 
 .categoria-tag {
-  font-size: 0.32rem;
-  color: var(--surface);
+  font-size: 0.35rem;
+  color: #000;
   background: var(--primary);
-  padding: 3px 6px;
+  padding: 3px 7px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border: 1px solid var(--bg2);
+  border: 1px solid var(--primary-dk);
 }
 
 .stock-info {
-  font-size: 0.38rem;
-  color: var(--surface);
-  margin-bottom: 10px;
-  line-height: 1.6;
+  font-size: 0.4rem;
+  color: var(--text-soft);
+  margin-bottom: 12px;
+  line-height: 1.8;
 }
 
 /* ── Botón eliminar ──────────────────────────────────────────────────────── */
 .btn-eliminar {
   width: 100%;
-  padding: 8px;
+  padding: 9px;
   background: transparent;
   color: var(--error);
   border: 2px solid var(--error);
-  border-radius: var(--radius);
   font-family: 'Press Start 2P', monospace;
-  font-size: 0.38rem;
+  font-size: 0.4rem;
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   box-shadow: 2px 2px 0 var(--error);
-  transition: box-shadow 0.08s ease, transform 0.08s ease;
+  transition: box-shadow 0.08s ease, transform 0.08s ease, background 0.08s ease;
   margin-top: 0;
 }
 
 .btn-eliminar:hover {
-  background: rgba(255, 0, 68, 0.12);
+  background: rgba(255, 34, 68, 0.15);
   box-shadow: 1px 1px 0 var(--error);
   transform: translate(1px, 1px);
   filter: none;
@@ -430,12 +424,12 @@ h2 {
 @media (max-width: 600px) {
   .contenedor {
     width: 95%;
-    padding: 20px 16px;
+    padding: 22px 16px;
     margin: 20px auto;
   }
 
   h1 {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
   }
 
   .fila-dos {
@@ -443,7 +437,7 @@ h2 {
   }
 
   .lista-productos {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
     gap: 12px;
   }
 }
