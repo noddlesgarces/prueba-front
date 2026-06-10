@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-// ── Especificaciones técnicas por categoría ───────────────────────────────
 const SPECS_POR_CATEGORIA = {
   Notebook: [
     { key: 'procesador', label: 'Procesador', placeholder: 'Ej: Intel Core i7-1355U' },
@@ -60,9 +59,7 @@ const SPECS_POR_CATEGORIA = {
 
 const CATEGORIAS = Object.keys(SPECS_POR_CATEGORIA);
 
-// ── Componente principal ──────────────────────────────────────────────────
 function ProductForm() {
-  // Estados formulario
   const [nombre,       setNombre]       = useState('');
   const [precio,       setPrecio]       = useState('');
   const [categoria,    setCategoria]    = useState('');
@@ -73,21 +70,17 @@ function ProductForm() {
   const [errores,      setErrores]      = useState({});
   const [productos,    setProductos]    = useState([]);
 
-  // Actualizar un campo de specs dinámico
   const handleSpec = (key, value) => {
     setSpecs(prev => ({ ...prev, [key]: value }));
   };
 
-  // Cambiar categoría limpia las specs anteriores
   const handleCategoria = (valor) => {
     setCategoria(valor);
     setSpecs({});
   };
 
-  // ── Validación ──────────────────────────────────────────────────────────
   const validarFormulario = () => {
     const e = {};
-
     if (nombre.trim() === '')       e.nombre    = 'El nombre es obligatorio';
     if (precio === '')              e.precio    = 'El precio es obligatorio';
     else if (Number(precio) <= 0)   e.precio    = 'El precio debe ser mayor a 0';
@@ -96,7 +89,6 @@ function ProductForm() {
     else if (Number(stock) < 0)     e.stock     = 'El stock debe ser >= 0';
     if (!imagen)                    e.imagen    = 'Selecciona una imagen';
 
-    // Validar specs del panel 2
     if (categoria && SPECS_POR_CATEGORIA[categoria]) {
       SPECS_POR_CATEGORIA[categoria].forEach(({ key, label }) => {
         if (!specs[key] || specs[key].trim() === '') {
@@ -104,12 +96,10 @@ function ProductForm() {
         }
       });
     }
-
     setErrores(e);
     return Object.keys(e).length === 0;
   };
 
-  // ── Imagen con límite 2MB ───────────────────────────────────────────────
   const verImagen = (e) => {
     const archivo = e.target.files[0];
     if (!archivo) return;
@@ -125,7 +115,6 @@ function ProductForm() {
     setVisualizacion(URL.createObjectURL(archivo));
   };
 
-  // ── Guardar ─────────────────────────────────────────────────────────────
   const guardarProducto = (e) => {
     e.preventDefault();
     if (!validarFormulario()) return;
@@ -135,20 +124,17 @@ function ProductForm() {
       stock: Number(stock), visualizacion, specs: { ...specs }
     }]);
 
-    // Reset
     setNombre(''); setPrecio(''); setCategoria('');
     setStock(''); setImagen(null); setVisualizacion('');
     setSpecs({}); setErrores({});
   };
 
-  // ── Eliminar con confirmación ───────────────────────────────────────────
   const eliminarProducto = (index) => {
     if (window.confirm('¿Eliminar este producto?')) {
       setProductos(prev => prev.filter((_, i) => i !== index));
     }
   };
 
-  // ── Estadísticas para Panel 3 ───────────────────────────────────────────
   const totalStock    = productos.reduce((acc, p) => acc + p.stock, 0);
   const totalValor    = productos.reduce((acc, p) => acc + p.precio * p.stock, 0);
   const porCategoria  = productos.reduce((acc, p) => {
@@ -158,27 +144,54 @@ function ProductForm() {
 
   const camposActuales = categoria ? SPECS_POR_CATEGORIA[categoria] : null;
 
-  // ── Render ──────────────────────────────────────────────────────────────
   return (
     <div className="app-layout">
 
-      {/* ══ HEADER ══════════════════════════════════════════════════════════ */}
       <header className="app-header">
-        <span className="header-logo">▶</span>
         <h1>TECH STORE</h1>
-        <span className="header-badge">8-BIT INVENTORY</span>
       </header>
 
-      {/* ══ GRID DE PANELES ═════════════════════════════════════════════════ */}
       <div className="paneles-grid">
 
-        {/* ── PANEL 1: Datos básicos ──────────────────────────────────────── */}
+        <section className="panel panel-stats">
+          <div className="panel-title">
+            <span className="panel-icon">①</span> INVENTARIO
+          </div>
+
+          <div className="stat-card">
+            <span className="stat-label">PRODUCTOS</span>
+            <span className="stat-value accent">{productos.length}</span>
+          </div>
+
+          <div className="stat-card">
+            <span className="stat-label">STOCK TOTAL</span>
+            <span className="stat-value">{totalStock} <span className="stat-unit">UND</span></span>
+          </div>
+
+          <div className="stat-card">
+            <span className="stat-label">VALOR TOTAL</span>
+            <span className="stat-value small">${totalValor.toLocaleString('es-CL')}</span>
+          </div>
+
+          <div className="stats-divider" />
+
+          <p className="stats-section-title">POR CATEGORÍA</p>
+          {CATEGORIAS.filter(cat => porCategoria[cat]).map(cat => (
+            <div key={cat} className="stat-row">
+              <span className="stat-row-label">{cat.toUpperCase()}</span>
+              <span className="stat-row-val">{porCategoria[cat]}</span>
+            </div>
+          ))}
+          {Object.keys(porCategoria).length === 0 && (
+            <p className="stats-empty-hint">SIN DATOS AÚN</p>
+          )}
+        </section>
+
         <section className="panel panel-form">
           <div className="panel-title">
-            <span className="panel-icon">①</span> DATOS DEL PRODUCTO
+            <span className="panel-icon">②</span> DATOS DEL PRODUCTO
           </div>
           <form onSubmit={guardarProducto}>
-
             <label>Nombre</label>
             <input
               type="text"
@@ -236,10 +249,9 @@ function ProductForm() {
           </form>
         </section>
 
-        {/* ── PANEL 2: Especificaciones técnicas (dinámico) ───────────────── */}
         <section className="panel panel-specs">
           <div className="panel-title">
-            <span className="panel-icon">②</span> ESPECIFICACIONES
+            <span className="panel-icon">③</span> ESPECIFICACIONES
           </div>
 
           {!categoria ? (
@@ -250,7 +262,7 @@ function ProductForm() {
               <p className="specs-hint">SPECS</p>
             </div>
           ) : (
-            <>
+            <div style={{ padding: '0 16px 18px' }}>
               <div className="specs-categoria-badge">{categoria.toUpperCase()}</div>
               {camposActuales.map(({ key, label, placeholder }) => (
                 <div key={key}>
@@ -266,48 +278,12 @@ function ProductForm() {
                   )}
                 </div>
               ))}
-            </>
-          )}
-        </section>
-
-        {/* ── PANEL 3: Dashboard / Estadísticas ──────────────────────────── */}
-        <section className="panel panel-stats">
-          <div className="panel-title">
-            <span className="panel-icon">③</span> INVENTARIO
-          </div>
-
-          <div className="stat-card">
-            <span className="stat-label">PRODUCTOS</span>
-            <span className="stat-value accent">{productos.length}</span>
-          </div>
-
-          <div className="stat-card">
-            <span className="stat-label">STOCK TOTAL</span>
-            <span className="stat-value">{totalStock} <span className="stat-unit">UND</span></span>
-          </div>
-
-          <div className="stat-card">
-            <span className="stat-label">VALOR TOTAL</span>
-            <span className="stat-value small">${totalValor.toLocaleString('es-CL')}</span>
-          </div>
-
-          <div className="stats-divider" />
-
-          <p className="stats-section-title">POR CATEGORÍA</p>
-          {CATEGORIAS.filter(cat => porCategoria[cat]).map(cat => (
-            <div key={cat} className="stat-row">
-              <span className="stat-row-label">{cat.toUpperCase()}</span>
-              <span className="stat-row-val">{porCategoria[cat]}</span>
             </div>
-          ))}
-          {Object.keys(porCategoria).length === 0 && (
-            <p className="specs-hint">SIN DATOS AÚN</p>
           )}
         </section>
 
-      </div>{/* fin paneles-grid */}
+      </div>
 
-      {/* ══ PANEL 4: Lista de productos ═════════════════════════════════════ */}
       <section className="panel panel-lista">
         <div className="panel-title">
           <span className="panel-icon">④</span>
@@ -326,7 +302,6 @@ function ProductForm() {
                   <span className="categoria-tag">{p.categoria.toUpperCase()}</span>
                   <h3>{p.nombre}</h3>
 
-                  {/* Specs resumidas */}
                   <div className="card-specs">
                     {Object.entries(p.specs).slice(0, 3).map(([key, val]) => (
                       <p key={key} className="card-spec-row">
